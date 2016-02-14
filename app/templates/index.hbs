@@ -1,0 +1,17 @@
+<ul>
+{{#each model as |message|}}
+  <li>
+    {{ gravatar-image email=message.email size=50}}
+    {{format-markdown message.text}}
+  </li>
+{{/each}}
+</ul>
+
+{{input value=user placeholder='user'}}
+
+<form>
+  {{textarea value=newMessage}}
+  <button type="submit" {{action 'sendMessage' newMessage user}}>Send</button>
+</form>
+
+{{format-markdown newMessage}}
