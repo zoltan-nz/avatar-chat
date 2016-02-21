@@ -1,53 +1,93 @@
 # Avatar-chat
 
-This README outlines the details of collaborating on this Ember application.
-A short introduction of this app could easily go here.
+```
+$ ember new avatar-chat
+```
 
-## Prerequisites
+Add bootstrap 
 
-You will need the following things properly installed on your computer.
+```
+$ ember install ember-bootstrap
+```
 
-* [Git](http://git-scm.com/)
-* [Node.js](http://nodejs.org/) (with NPM)
-* [Bower](http://bower.io/)
-* [Ember CLI](http://www.ember-cli.com/)
-* [PhantomJS](http://phantomjs.org/)
+Create index route
 
-## Installation
+```
+$ ember g route index
+```
 
-* `git clone <repository-url>` this repository
-* change into the new directory
-* `npm install`
-* `bower install`
+Add basic array to the model
 
-## Running / Development
+```javascript
+import Ember from 'ember';
 
-* `ember server`
-* Visit your app at [http://localhost:4200](http://localhost:4200).
+export default Ember.Route.extend({
 
-### Code Generators
+  model() {
+    return [
+      {
+        name: 'Black Mango',
+        url: 'http://cadeaucavaliers.com/files/boys/vinniehead.jpg'
+      },
 
-Make use of the many generators for code, try `ember help generate` for more details
+      {
+        name: 'Darth Vader',
+        url: 'http://bturn.com/wp-content/uploads/2011/11/darth-vader-face.jpeg'
+      }
+    ];
+  }
+});
+```
 
-### Running Tests
+* Add bootstrap to application.hbs
+* Wrapp the list in bootstrap's panel style
 
-* `ember test`
-* `ember test --server`
+* Setup database and api server:
 
-### Building
+```
+$ ember install emberfire
+```
 
-* `ember build` (development)
-* `ember build --environment production` (production)
+We need a proper model:
 
-### Deploying
+```
+$ ember g model avatar name url
+```
 
-Specify what it takes to deploy your app.
+Create a form to add new avatar
 
-## Further Reading / Useful Links
+Add action to route
 
-* [ember.js](http://emberjs.com/)
-* [ember-cli](http://www.ember-cli.com/)
-* Development Browser Extensions
-  * [ember inspector for chrome](https://chrome.google.com/webstore/detail/ember-inspector/bmdblncegkenkacieihfhpjfppoconhi)
-  * [ember inspector for firefox](https://addons.mozilla.org/en-US/firefox/addon/ember-inspector/)
+```
+  actions: {
+    addNewAvatar(name, url) {
+
+      this.store.createRecord('avatar', {
+        name,
+        url
+      }).save();
+
+      this.controller.set('name', '');
+      this.controller.set('url', '');
+    }
+  }
+```
+
+Create a new route /avatar/:avatar_id
+
+Update router.js
+
+```
+Router.map(function() {
+  this.route('avatar', { path: '/avatar/:avatar_id' })  
+});
+```
+
+Add model to avatar.js
+
+```
+model(params) {
+  return this.store.find('avatar', params.avatar_id);
+}
+```
 
